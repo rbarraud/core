@@ -68,6 +68,7 @@ class SwList;
 #include <com/sun/star/chart2/data/XDataProvider.hpp>
 #include <com/sun/star/linguistic2/XProofreadingIterator.hpp>
 #include <com/sun/star/script/vba/XVBAEventProcessor.hpp>
+#include <pagedesc.hxx>
 
 #include <boost/unordered_map.hpp>
 
@@ -140,7 +141,6 @@ class SwNodeRange;
 class SwNodes;
 class SwNumRule;
 class SwNumRuleTbl;
-class SwPageDesc;
 class SwPagePreviewPrtData;
 class SwRangeRedline;
 class SwRedlineTbl;
@@ -230,14 +230,6 @@ namespace sfx2 {
     class IXmlIdRegistry;
     class LinkManager;
 }
-
-// PageDescriptor-interface, Array because of inlines.
-class SwPageDescs : public std::vector<SwPageDesc*>
-{
-public:
-    // the destructor will free all objects still in the vector
-    ~SwPageDescs();
-};
 
 // forward declaration
 void SetAllScriptItem( SfxItemSet& rSet, const SfxPoolItem& rItem );
@@ -1292,6 +1284,8 @@ public:
     SwPageDesc& GetPageDesc( sal_uInt16 i ) { return *maPageDescs[i]; }
     SwPageDesc* FindPageDescByName( const OUString& rName,
                                     sal_uInt16* pPos = 0 ) const;
+    SwPageDesc* FindPageDescByName( const OUString& rName,
+                                    sal_uInt16* pPos = 0 );
 
     /** Copy the complete PageDesc - beyond document and "deep"!
      Optionally copying of PoolFmtId, -HlpId can be prevented. */
@@ -1309,10 +1303,8 @@ public:
         { CopyPageDescHeaderFooterImpl( false, rSrcFmt, rDestFmt ); }
 
     // For Reader
-    SwPageDesc * GetPageDesc( const OUString & rName );
     void ChgPageDesc( const OUString & rName, const SwPageDesc& );
     void ChgPageDesc( sal_uInt16 i, const SwPageDesc& );
-    bool FindPageDesc( const OUString & rName, sal_uInt16 * pFound );
     void DelPageDesc( const OUString & rName, bool bBroadcast = false);
     void DelPageDesc( sal_uInt16 i, bool bBroadcast = false );
     void PreDelPageDesc(SwPageDesc * pDel);
