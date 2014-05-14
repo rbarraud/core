@@ -824,8 +824,7 @@ Reference< XShape > Shape::createAndInsert(
             }
             else if (mbTextBox)
             {
-                //No such property yet
-                //aShapeProps.setProperty(PROP_TextBox, uno::makeAny(true));
+                aShapeProps.setProperty(PROP_TextBox, uno::makeAny(true));
             }
 
             PropertySet( xSet ).setProperties( aShapeProps );
