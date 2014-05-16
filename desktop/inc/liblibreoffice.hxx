@@ -65,16 +65,15 @@ public:
         mpDoc->setPart(mpDoc, nPart);
     }
 
-    inline void paintTile(void* pHandle,
-                          const int nCanvasWidth,
+    inline unsigned char* paintTile(const int nCanvasWidth,
                           const int nCanvasHeight,
                           const int nTilePosX,
                           const int nTilePosY,
                           const int nTileWidth,
                           const int nTileHeight)
     {
-        mpDoc->paintTile(mpDoc, pHandle, nCanvasWidth, nCanvasHeight,
-                         nTilePosX, nTilePosY, nTileWidth, nTileHeight);
+        return mpDoc->paintTile(mpDoc, nCanvasWidth, nCanvasHeight,
+                                nTilePosX, nTilePosY, nTileWidth, nTileHeight);
     }
 #endif // LLO_USE_UNSTABLE_API
 };
