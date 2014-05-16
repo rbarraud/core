@@ -453,16 +453,19 @@ static void aBasicErrorFunc(const OUString& rError, const OUString& rAction)
 
 static void initialize_uno(const OUString &aAppURL)
 {
-    rtl::Bootstrap::setIniFilename( aAppURL + "/fundamentalrc" );
+    // without rendering we can simply use fundamentalrc, and manually add some
+    // parameters below, however we won't be able to run the soffice_main
+    // thread in that case.
+    rtl::Bootstrap::setIniFilename( aAppURL + "/sofficerc" );
 
-    rtl::Bootstrap::set( "CONFIGURATION_LAYERS",
-                         "xcsxcu:${BRAND_BASE_DIR}/" LIBO_SHARE_FOLDER "/registry "
-                         "res:${BRAND_BASE_DIR}/" LIBO_SHARE_FOLDER "/registry "
-//                       "bundledext:${${BRAND_BASE_DIR}/" LIBO_ETC_FOLDER "/unorc:BUNDLED_EXTENSIONS_USER}/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend/configmgr.ini " );
-//                       "sharedext:${${BRAND_BASE_DIR}/" LIBO_ETC_FOLDER "/unorc:SHARED_EXTENSIONS_USER}/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend/configmgr.ini "
-//                       "userext:${${BRAND_BASE_DIR}/" LIBO_ETC_FOLDER "/unorc:UNO_USER_PACKAGES_CACHE}/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend/configmgr.ini "
-//                         "user:${$BRAND_BASE_DIR/" LIBO_ETC_FOLDER "/bootstraprc:UserInstallation}/user/registrymodifications.xcu"
-                         );
+//     rtl::Bootstrap::set( "CONFIGURATION_LAYERS",
+//                          "xcsxcu:${BRAND_BASE_DIR}/" LIBO_SHARE_FOLDER "/registry "
+//                          "res:${BRAND_BASE_DIR}/" LIBO_SHARE_FOLDER "/registry "
+// //                       "bundledext:${${BRAND_BASE_DIR}/" LIBO_ETC_FOLDER "/unorc:BUNDLED_EXTENSIONS_USER}/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend/configmgr.ini " );
+// //                       "sharedext:${${BRAND_BASE_DIR}/" LIBO_ETC_FOLDER "/unorc:SHARED_EXTENSIONS_USER}/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend/configmgr.ini "
+// //                       "userext:${${BRAND_BASE_DIR}/" LIBO_ETC_FOLDER "/unorc:UNO_USER_PACKAGES_CACHE}/registry/com.sun.star.comp.deployment.configuration.PackageRegistryBackend/configmgr.ini "
+// //                         "user:${$BRAND_BASE_DIR/" LIBO_ETC_FOLDER "/bootstraprc:UserInstallation}/user/registrymodifications.xcu"
+//                          );
 
     xContext = cppu::defaultBootstrap_InitialComponentContext();
     fprintf(stderr, "Uno initialized %d\n", xContext.is());
