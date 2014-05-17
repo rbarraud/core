@@ -373,6 +373,33 @@ void ScGridWindow::Paint( const Rectangle& rRect )
     Draw( nX1,nY1,nX2,nY2, SC_UPDATE_MARKS );           // nicht weiterzeichnen
 
     bIsInPaint = false;
+
+    for(boost::ptr_vector<Window>::iterator itr = maChildWindows.begin(),
+            itrEnd = maChildWindows.end(); itr != itrEnd; ++itr)
+    {
+        if(!itr->IsVisible())
+            continue;
+
+        Point aTopLeft = aPixRect.TopLeft();
+        Point aBottomRight = aPixRect.BottomRight();
+
+        Point aPoint = itr->GetPosPixel();
+        Size aSize = itr->GetSizePixel();
+
+        if(aTopLeft.X() > aPoint.X() + aSize.Width())
+            continue;
+
+        if(aTopLeft.Y() > aPoint.Y() + aSize.Height())
+            continue;
+
+        if(aBottomRight.X() < aPoint.X())
+            continue;
+
+        if(aBottomRight.Y() < aPoint.Y())
+            continue;
+
+        itr->Paint(rRect);
+    }
 }
 
 
