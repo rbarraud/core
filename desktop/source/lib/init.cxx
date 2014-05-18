@@ -170,6 +170,9 @@ static unsigned char* doc_paintTile(LibreOfficeDocument* pThis,
                           int* pRowStride,
                           const int nTilePosX, const int nTilePosY,
                           const int nTileWidth, const int nTileHeight);
+static void doc_getDocumentSize(LibreOfficeDocument* pThis,
+                                long* pWidth,
+                                long* pHeight);
 
 struct LibLODocument_Impl : public _LibreOfficeDocument
 {
@@ -187,6 +190,7 @@ struct LibLODocument_Impl : public _LibreOfficeDocument
         getNumberOfParts = doc_getNumberOfParts;
         setPart = doc_setPart;
         paintTile = doc_paintTile;
+        getDocumentSize = doc_getDocumentSize;
     }
 };
 
@@ -422,7 +426,23 @@ static unsigned char* doc_paintTile (LibreOfficeDocument* pThis,
     return pRet;
 }
 
+static void doc_getDocumentSize(LibreOfficeDocument* pThis,
+                                long* pWidth,
+                                long* pHeight)
+{
+    LibLODocument_Impl* pDocument = static_cast<LibLODocument_Impl*>(pThis);
 
+    if (true) // TODO: test that we have a writer document here (vs calc/impress/etc.)
+    {
+        SwXTextDocument* pTxtDoc = dynamic_cast< SwXTextDocument* >( pDocument->mxComponent.get() );
+        SwDocShell* pDocShell = pTxtDoc->GetDocShell();
+        SwDoc* pDoc = pDocShell->GetDoc();
+        SwViewShell* pViewShell = pDoc->GetCurrentViewShell();
+        Size aDocumentSize = pViewShell->GetDocSize();
+        *pWidth = aDocumentSize.Width();
+        *pHeight = aDocumentSize.Height();
+    }
+}
 
 static char* lo_getError (LibreOffice *pThis)
 {

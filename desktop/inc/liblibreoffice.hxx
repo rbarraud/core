@@ -76,6 +76,11 @@ public:
         return mpDoc->paintTile(mpDoc, nCanvasWidth, nCanvasHeight, pRowStride,
                                 nTilePosX, nTilePosY, nTileWidth, nTileHeight);
     }
+
+    inline void getDocumentSize(long* pWidth, long* pHeight)
+    {
+        mpDoc->getDocumentSize(mpDoc, pWidth, pHeight);
+    }
 #endif // LLO_USE_UNSTABLE_API
 };
 
