@@ -67,12 +67,13 @@ public:
 
     inline unsigned char* paintTile(const int nCanvasWidth,
                           const int nCanvasHeight,
+                          int* pRowStride,
                           const int nTilePosX,
                           const int nTilePosY,
                           const int nTileWidth,
                           const int nTileHeight)
     {
-        return mpDoc->paintTile(mpDoc, nCanvasWidth, nCanvasHeight,
+        return mpDoc->paintTile(mpDoc, nCanvasWidth, nCanvasHeight, pRowStride,
                                 nTilePosX, nTilePosY, nTileWidth, nTileHeight);
     }
 #endif // LLO_USE_UNSTABLE_API
