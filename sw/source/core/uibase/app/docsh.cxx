@@ -872,7 +872,7 @@ Rectangle SwDocShell::GetVisArea( sal_uInt16 nAspect ) const
 
 Printer *SwDocShell::GetDocumentPrinter()
 {
-    return pDoc->getPrinter( false );
+    return pDoc->getIDocumentDeviceAccessConst()->getPrinter( false );
 }
 
 OutputDevice* SwDocShell::GetDocumentRefDev()
@@ -885,7 +885,7 @@ void SwDocShell::OnDocumentPrinterChanged( Printer * pNewPrinter )
     if ( pNewPrinter )
         GetDoc()->setJobsetup( pNewPrinter->GetJobSetup() );
     else
-        GetDoc()->setPrinter( 0, true, true );
+        GetDoc()->getIDocumentDeviceAccess()->setPrinter( 0, true, true );
 }
 
 sal_uLong SwDocShell::GetMiscStatus() const
