@@ -877,7 +877,7 @@ Printer *SwDocShell::GetDocumentPrinter()
 
 OutputDevice* SwDocShell::GetDocumentRefDev()
 {
-    return pDoc->getReferenceDevice( false );
+    return pDoc->getIDocumentDeviceAccessConst()->getReferenceDevice( false );
 }
 
 void SwDocShell::OnDocumentPrinterChanged( Printer * pNewPrinter )
