@@ -94,7 +94,7 @@ public:
 class SwGrfFmtColls : public SwFmtsBaseModify<SwGrfFmtColl*>
 {
 public:
-    SwGrfFmtColls(): SwFmtsBaseModify( false ) {}
+    SwGrfFmtColls() : SwFmtsBaseModify( false ) {}
     virtual ~SwGrfFmtColls() {}
 };
 
@@ -116,7 +116,7 @@ public:
 class SwTxtFmtColls : public SwFmtsBaseModify<SwTxtFmtColl*>
 {
 public:
-    SwTxtFmtColls(): SwFmtsBaseModify( false ) {}
+    SwTxtFmtColls() : SwFmtsBaseModify( false ) {}
     virtual ~SwTxtFmtColls() {}
     void dumpAsXml(xmlTextWriterPtr w);
 };
