@@ -1781,9 +1781,9 @@ void SwDrawContact::ConnectToLayout( const SwFmtAnchor* pAnch )
                         {
                             const SwNodeIndex& rIdx = pAnch->GetCntntAnchor()->nNode;
                             SwFrmFmts& rFmts = *(pDrawFrmFmt->GetDoc()->GetSpzFrmFmts());
-                            for( sal_uInt16 i = 0; i < rFmts.size(); ++i )
+                            for ( SwFrmFmts::const_iterator it = rFmts.begin(); it != rFmts.end(); it++ )
                             {
-                                SwFrmFmt* pFlyFmt = rFmts[i];
+                                SwFrmFmt* pFlyFmt = *it;
                                 if( pFlyFmt->GetCntnt().GetCntntIdx() &&
                                     rIdx == *(pFlyFmt->GetCntnt().GetCntntIdx()) )
                                 {

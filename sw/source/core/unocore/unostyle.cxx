@@ -537,8 +537,8 @@ static sal_Int32 lcl_GetCountOrName(const SwDoc &rDoc,
         {
             sal_uInt16 nBaseCount = RES_POOLFRM_END - RES_POOLFRM_BEGIN;
             nIndex = nIndex - nBaseCount;
-            const sal_uInt16 nArrLen = rDoc.GetFrmFmts()->size();
-            for( sal_uInt16 i = 0; i < nArrLen; i++ )
+            const sal_Int32 nArrLen = rDoc.GetFrmFmts()->GetFmtCount();
+            for( sal_Int32 i = 0; i < nArrLen; i++ )
             {
                 SwFrmFmt* pFmt = (*rDoc.GetFrmFmts())[ i ];
                 if(pFmt->IsDefault() || pFmt->IsAuto())

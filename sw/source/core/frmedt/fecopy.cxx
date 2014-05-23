@@ -139,15 +139,17 @@ bool SwFEShell::Copy( SwDoc* pClpDoc, const OUString* pNewClpTxt )
         }
         pFlyFmt = pClpDoc->CopyLayoutFmt( *pFlyFmt, aAnchor, true, true );
 
+        // Special handling of first element in array (RootFmt)!
+
        // assure the "RootFmt" is the first element in Spz-Array
         // (if necessary Flys were copied in Flys)
         SwFrmFmts& rSpzFrmFmts = *(SwFrmFmts*)pClpDoc->GetSpzFrmFmts();
         if( rSpzFrmFmts[ 0 ] != pFlyFmt )
         {
-            SwFrmFmts::iterator it = std::find( rSpzFrmFmts.begin(), rSpzFrmFmts.end(), pFlyFmt );
-            OSL_ENSURE( it != rSpzFrmFmts.end(), "Fly not contained in Spz-Array" );
+            sal_Int32 pos = rSpzFrmFmts.GetPos( pFlyFmt );
+            OSL_ENSURE( pos != rSpzFrmFmts.GetFmtCountMax(), "Fly not contained in Spz-Array" );
 
-            rSpzFrmFmts.erase( it );
+            rSpzFrmFmts.erase( rSpzFrmFmts.begin() + pos );
             rSpzFrmFmts.insert( rSpzFrmFmts.begin(), pFlyFmt );
         }
 

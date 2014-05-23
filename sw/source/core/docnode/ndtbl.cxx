@@ -1642,9 +1642,9 @@ bool SwNodes::TableToText( const SwNodeRange& rRange, sal_Unicode cCh,
     // #i28006# Fly frames have to be restored even if the table was
     // #alone in the section
     const SwFrmFmts& rFlyArr = *GetDoc()->GetSpzFrmFmts();
-    for( sal_uInt16 n = 0; n < rFlyArr.size(); ++n )
+    for ( SwFrmFmts::const_iterator it = rFlyArr.begin(); it != rFlyArr.end(); it++ )
     {
-        SwFrmFmt *const pFmt = (SwFrmFmt*)rFlyArr[n];
+        SwFrmFmt *const pFmt = *it;
         const SwFmtAnchor& rAnchor = pFmt->GetAnchor();
         SwPosition const*const pAPos = rAnchor.GetCntntAnchor();
         if (pAPos &&
@@ -4473,8 +4473,8 @@ bool SwDoc::UnProtectTbls( const SwPaM& rPam )
     SwFrmFmts& rFmts = *GetTblFrmFmts();
     SwTable* pTbl;
     const SwTableNode* pTblNd;
-    for( sal_uInt16 n = rFmts.size(); n ; )
-        if( 0 != (pTbl = SwTable::FindTable( rFmts[ --n ] )) &&
+    for ( SwFrmFmts::const_reverse_iterator it = rFmts.rbegin(); it != rFmts.rend(); it++ )
+        if( 0 != (pTbl = SwTable::FindTable( *it )) &&
             0 != (pTblNd = pTbl->GetTableNode() ) &&
             pTblNd->GetNodes().IsDocNodes() )
         {

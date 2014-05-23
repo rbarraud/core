@@ -306,9 +306,8 @@ bool SwView::InsertGraphicDlg( SfxRequest& rReq )
 
     std::vector<OUString> aFormats;
     SwDoc* pDoc = pDocShell->GetDoc();
-    const sal_uInt16 nArrLen = pDoc->GetFrmFmts()->size();
-    sal_uInt16 i;
-    for( i = 0; i < nArrLen; i++ )
+    const sal_Int32 nArrLen = pDoc->GetFrmFmts()->size();
+    for( sal_Int32 i = 0; i < nArrLen; i++ )
     {
         SwFrmFmt* pFmt = (*pDoc->GetFrmFmts())[ i ];
         if(pFmt->IsDefault() || pFmt->IsAuto())
@@ -320,7 +319,7 @@ bool SwView::InsertGraphicDlg( SfxRequest& rReq )
 
     const ::std::vector<OUString>& rFrmPoolArr(
             SwStyleNameMapper::GetFrmFmtUINameArray());
-    for( i = 0; i < rFrmPoolArr.size(); ++i )
+    for( sal_uInt16 i = 0; i < rFrmPoolArr.size(); ++i )
     {
         aFormats.push_back(rFrmPoolArr[i]);
     }
@@ -332,7 +331,7 @@ bool SwView::InsertGraphicDlg( SfxRequest& rReq )
     OUString* pEntries = aListBoxEntries.getArray();
     sal_Int16 nSelect = 0;
     OUString sGraphicFormat = SW_RESSTR(STR_POOLFRM_GRAPHIC);
-    for( i = 0; i < aFormats.size(); i++ )
+    for( sal_uInt16 i = 0; i < aFormats.size(); i++ )
     {
         pEntries[i] = aFormats[i];
         if(pEntries[i].equals(sGraphicFormat))

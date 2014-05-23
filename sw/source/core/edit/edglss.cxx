@@ -195,8 +195,8 @@ bool SwEditShell::_CopySelToDoc( SwDoc* pInsDoc, SwNodeIndex* pSttNd )
             {
                 const OUString rTblName = pTblNd->GetTable().GetFrmFmt()->GetName();
                 const SwFrmFmts& rTblFmts = *pInsDoc->GetTblFrmFmts();
-                for( sal_uInt16 n = rTblFmts.size(); n; )
-                    if( rTblFmts[ --n ]->GetName() == rTblName )
+                for ( SwFrmFmts::const_reverse_iterator it = rTblFmts.rbegin(); it != rTblFmts.rend(); it++ )
+                    if( (*it)->GetName() == rTblName )
                     {
                         bCpyTblNm = false;
                         break;

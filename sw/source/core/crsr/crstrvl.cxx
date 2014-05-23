@@ -2201,9 +2201,9 @@ bool SwCrsrShell::SelectNxtPrvHyperlink( bool bNext )
     // then check all the Flys with a URL or imapge map
     {
         const SwFrmFmts* pFmts = GetDoc()->GetSpzFrmFmts();
-        for( sal_uInt16 n = 0, nEnd = pFmts->size(); n < nEnd; ++n )
+        for ( SwFrmFmts::const_iterator it = pFmts->begin(); it != pFmts->end(); it++ )
         {
-            SwFlyFrmFmt* pFmt = (SwFlyFrmFmt*)(*pFmts)[ n ];
+            SwFlyFrmFmt* pFmt = (SwFlyFrmFmt*) *it;
             const SwFmtURL& rURLItem = pFmt->GetURL();
             if( rURLItem.GetMap() || !rURLItem.GetURL().isEmpty() )
             {

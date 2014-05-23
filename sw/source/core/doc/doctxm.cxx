@@ -1492,11 +1492,11 @@ void SwTOXBaseSection::UpdateTable( const SwTxtNode* pOwnChapterNode )
     SwNodes& rNds = pDoc->GetNodes();
     const SwFrmFmts& rArr = *pDoc->GetTblFrmFmts();
 
-    for( sal_uInt16 n = 0; n < rArr.size(); ++n )
+    for ( SwFrmFmts::const_iterator it = rArr.begin(); it != rArr.end(); it++ )
     {
         ::SetProgressState( 0, pDoc->GetDocShell() );
 
-        SwTable* pTmpTbl = SwTable::FindTable( rArr[ n ] );
+        SwTable* pTmpTbl = SwTable::FindTable( *it );
         SwTableBox* pFBox;
         if( pTmpTbl && 0 != (pFBox = pTmpTbl->GetTabSortBoxes()[0] ) &&
             pFBox->GetSttNd() && pFBox->GetSttNd()->GetNodes().IsDocNodes() )

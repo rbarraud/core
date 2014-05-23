@@ -1328,11 +1328,11 @@ void SwHTMLParser::StripTrailingPara()
         {
             sal_uLong nNodeIdx = pPam->GetPoint()->nNode.GetIndex();
 
-            const SwFrmFmts& rFrmFmtTbl = *pDoc->GetSpzFrmFmts();
+            const SwFrmFmts& rFmts = *pDoc->GetSpzFrmFmts();
 
-            for( sal_uInt16 i=0; i<rFrmFmtTbl.size(); i++ )
+            for ( SwFrmFmts::const_iterator it = rFmts.begin(); it != rFmts.end(); it++ )
             {
-                SwFrmFmt const*const pFmt = rFrmFmtTbl[i];
+                SwFrmFmt const*const pFmt = *it;
                 SwFmtAnchor const*const pAnchor = &pFmt->GetAnchor();
                 SwPosition const*const pAPos = pAnchor->GetCntntAnchor();
                 if (pAPos &&

@@ -517,16 +517,14 @@ const SwPageDesc* SwNode::FindPageDesc( bool bCalcLay,
             // Find the right Anchor first
             const SwFrmFmt* pFmt = 0;
             const SwFrmFmts& rFmts = *pDoc->GetSpzFrmFmts();
-            sal_uInt16 n;
 
-            for( n = 0; n < rFmts.size(); ++n )
+            for ( SwFrmFmts::const_iterator it = rFmts.begin(); it != rFmts.end(); it++ )
             {
-                SwFrmFmt* pFrmFmt = rFmts[ n ];
-                const SwFmtCntnt& rCntnt = pFrmFmt->GetCntnt();
+                const SwFmtCntnt& rCntnt = (*it)->GetCntnt();
                 if( rCntnt.GetCntntIdx() &&
                     &rCntnt.GetCntntIdx()->GetNode() == (SwNode*)pSttNd )
                 {
-                    pFmt = pFrmFmt;
+                    pFmt = *it;
                     break;
                 }
             }
@@ -542,9 +540,10 @@ const SwPageDesc* SwNode::FindPageDesc( bool bCalcLay,
                     while( pFlyNd )
                     {
                         // Get up through the Anchor
-                        for( n = 0; n < rFmts.size(); ++n )
+                        SwFrmFmts::const_iterator it;
+                        for ( it = rFmts.begin(); it != rFmts.end(); it++ )
                         {
-                            const SwFrmFmt* pFrmFmt = rFmts[ n ];
+                            const SwFrmFmt* pFrmFmt = *it;
                             const SwNodeIndex* pIdx = pFrmFmt->GetCntnt().
                                                         GetCntntIdx();
                             if( pIdx && pFlyNd == &pIdx->GetNode() )
@@ -568,7 +567,7 @@ const SwPageDesc* SwNode::FindPageDesc( bool bCalcLay,
                                 break;
                             }
                         }
-                        if( n >= rFmts.size() )
+                        if( it == rFmts.end() )
                         {
                             OSL_ENSURE( !this, "FlySection, but no Format found" );
                             return 0;
@@ -720,9 +719,9 @@ SwFrmFmt* SwNode::GetFlyFmt() const
         {
             // The hard way through the Doc is our last way out
             const SwFrmFmts& rFrmFmtTbl = *GetDoc()->GetSpzFrmFmts();
-            for( sal_uInt16 n = 0; n < rFrmFmtTbl.size(); ++n )
+            for ( SwFrmFmts::const_iterator it = rFrmFmtTbl.begin(); it != rFrmFmtTbl.end(); it++ )
             {
-                SwFrmFmt* pFmt = rFrmFmtTbl[n];
+                SwFrmFmt* pFmt = *it;
                 const SwFmtCntnt& rCntnt = pFmt->GetCntnt();
                 if( rCntnt.GetCntntIdx() &&
                     &rCntnt.GetCntntIdx()->GetNode() == pSttNd )

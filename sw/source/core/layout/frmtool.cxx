@@ -896,11 +896,11 @@ SwCntntNotify::~SwCntntNotify()
 
             const SwPageFrm *pPage = 0;
             SwNodeIndex *pIdx  = 0;
-            SwFrmFmts *pTbl = pDoc->GetSpzFrmFmts();
+            const SwFrmFmts &rTblFmts = *(pDoc->GetSpzFrmFmts());
 
-            for ( sal_uInt16 i = 0; i < pTbl->size(); ++i )
+            for ( SwFrmFmts::const_iterator it = rTblFmts.begin(); it != rTblFmts.end(); it++ )
             {
-                SwFrmFmt *pFmt = (*pTbl)[i];
+                SwFrmFmt *pFmt = *it;
                 const SwFmtAnchor &rAnch = pFmt->GetAnchor();
                 if ( FLY_AT_PAGE != rAnch.GetAnchorId() ||
                      rAnch.GetCntntAnchor() == 0 )
@@ -977,9 +977,9 @@ SwCntntNotify::~SwCntntNotify()
 void AppendObjs( const SwFrmFmts *pTbl, sal_uLong nIndex,
                         SwFrm *pFrm, SwPageFrm *pPage )
 {
-    for ( sal_uInt16 i = 0; i < pTbl->size(); ++i )
+    for ( SwFrmFmts::const_iterator it = pTbl->begin(); it != pTbl->end(); it++ )
     {
-        SwFrmFmt *pFmt = (SwFrmFmt*)(*pTbl)[i];
+        SwFrmFmt *pFmt = *it;
         const SwFmtAnchor &rAnch = pFmt->GetAnchor();
         if ( rAnch.GetCntntAnchor() &&
              (rAnch.GetCntntAnchor()->nNode.GetIndex() == nIndex) )
@@ -1002,7 +1002,7 @@ void AppendObjs( const SwFrmFmts *pTbl, sal_uLong nIndex,
                 {
                     OSL_ENSURE( !bSdrObj, "DrawObject not found." );
                     pFmt->GetDoc()->DelFrmFmt( pFmt );
-                    --i;
+                    it--;
                     continue;
                 }
                 if ( pSdrObj )
@@ -1101,12 +1101,12 @@ void AppendAllObjs( const SwFrmFmts *pTbl, const SwFrm* pSib )
 
     SwFrmFmts aCpy( *pTbl );
 
-    sal_uInt16 nOldCnt = USHRT_MAX;
+    sal_Int32 nOldCnt = pTbl->GetFmtCountMax();
 
-    while ( !aCpy.empty() && aCpy.size() != nOldCnt )
+    while ( !aCpy.empty() && (sal_Int32) aCpy.size() != nOldCnt )
     {
         nOldCnt = aCpy.size();
-        for ( int i = 0; i < int(aCpy.size()); ++i )
+        for ( sal_Int32 i = 0; i < (sal_Int32) aCpy.size(); ++i )
         {
             SwFrmFmt *pFmt = (SwFrmFmt*)aCpy[ sal_uInt16(i) ];
             const SwFmtAnchor &rAnch = pFmt->GetAnchor();

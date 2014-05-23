@@ -3608,8 +3608,8 @@ void SwXTextTable::setName(const OUString& rName) throw( uno::RuntimeException, 
         const OUString aOldName( pFmt->GetName() );
         SwFrmFmt* pTmpFmt;
         const SwFrmFmts* pTbl = pFmt->GetDoc()->GetTblFrmFmts();
-        for( size_t i = pTbl->size(); i; )
-            if( !( pTmpFmt = (*pTbl)[ --i ] )->IsDefault() &&
+        for ( SwFrmFmts::const_reverse_iterator it = pTbl->rbegin(); it != pTbl->rend(); it++ )
+            if( !( pTmpFmt = *it )->IsDefault() &&
                 pTmpFmt->GetName() == rName &&
                             pFmt->GetDoc()->IsUsed( *pTmpFmt ))
             {

@@ -264,9 +264,9 @@ void SwDoc::DelLayoutFmt( SwFrmFmt *pFmt )
                     std::vector<SwFrmFmt*> aToDeleteFrmFmts;
                     const sal_uLong nNodeIdxOfFlyFmt( pCntntIdx->GetIndex() );
 
-                    for ( sal_uInt16 i = 0; i < pTbl->size(); ++i )
+                    for ( SwFrmFmts::const_iterator it = pTbl->begin(); it != pTbl->end(); it++ )
                     {
-                        SwFrmFmt* pTmpFmt = (*pTbl)[i];
+                        SwFrmFmt* pTmpFmt = *it;
                         const SwFmtAnchor &rAnch = pTmpFmt->GetAnchor();
                         if ( rAnch.GetAnchorId() == FLY_AT_FLY &&
                              rAnch.GetCntntAnchor()->nNode.GetIndex() == nNodeIdxOfFlyFmt )
@@ -1918,9 +1918,9 @@ static OUString lcl_GetUniqueFlyName( const SwDoc* pDoc, sal_uInt16 nDefStrId )
 
     memset( pSetFlags, 0, nFlagSize );
 
-    for( n = 0; n < rFmts.size(); ++n )
+    for ( SwFrmFmts::const_iterator it = rFmts.begin(); it != rFmts.end(); it++ )
     {
-        const SwFrmFmt* pFlyFmt = rFmts[ n ];
+        const SwFrmFmt* pFlyFmt = *it;
         if( RES_FLYFRMFMT == pFlyFmt->Which() &&
             pFlyFmt->GetName().startsWith( aName ) )
         {
@@ -1965,7 +1965,7 @@ OUString SwDoc::GetUniqueFrameName() const
 const SwFlyFrmFmt* SwDoc::FindFlyByName( const OUString& rName, sal_Int8 nNdTyp ) const
 {
     const SwFrmFmts& rFmts = *GetSpzFrmFmts();
-    for( sal_uInt16 n = rFmts.size(); n; )
+    for( sal_Int32 n = rFmts.size(); n; )
     {
         const SwFrmFmt* pFlyFmt = rFmts[ --n ];
         const SwNodeIndex* pIdx = 0;

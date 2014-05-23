@@ -1521,9 +1521,9 @@ static void lcl_SaveStyles( sal_uInt16 nFamily, std::vector<void*>& rArr, SwDoc&
     case SFX_STYLE_FAMILY_FRAME:
         {
             const SwFrmFmts& rTbl = *rDoc.GetFrmFmts();
-            for( sal_uInt16 n = 0, nCnt = rTbl.size(); n < nCnt; ++n )
+            for ( SwFrmFmts::const_iterator it = rTbl.begin(); it != rTbl.end(); it++ )
             {
-                rArr.push_back( rTbl[ n ] );
+                rArr.push_back( *it );
             }
         }
         break;
@@ -1556,7 +1556,7 @@ static bool lcl_Contains(const std::vector<void*>& rArr, const void* p)
 
 static void lcl_DeleteInfoStyles( sal_uInt16 nFamily, std::vector<void*>& rArr, SwDoc& rDoc )
 {
-    sal_uInt16 n, nCnt;
+    sal_Int32 n, nCnt;
     switch( nFamily )
     {
     case SFX_STYLE_FAMILY_CHAR:
@@ -1591,10 +1591,10 @@ static void lcl_DeleteInfoStyles( sal_uInt16 nFamily, std::vector<void*>& rArr, 
         {
             std::deque<SwFrmFmt*> aDelArr;
             const SwFrmFmts& rTbl = *rDoc.GetFrmFmts();
-            for( n = 0, nCnt = rTbl.size(); n < nCnt; ++n )
+            for ( SwFrmFmts::const_iterator it = rTbl.begin(); it != rTbl.end(); it++ )
             {
-                if( !lcl_Contains( rArr, rTbl[ n ] ))
-                    aDelArr.push_front( rTbl[ n ] );
+                if( !lcl_Contains( rArr, *it ))
+                    aDelArr.push_front( *it );
             }
             for( n = 0, nCnt = aDelArr.size(); n < nCnt; ++n )
                 rDoc.DelFrmFmt( aDelArr[ n ] );
@@ -2746,8 +2746,8 @@ SfxStyleSheetBase*  SwStyleSheetIterator::First()
     if( nSearchFamily == SFX_STYLE_FAMILY_FRAME ||
         nSearchFamily == SFX_STYLE_FAMILY_ALL )
     {
-        const sal_uInt16 nArrLen = rDoc.GetFrmFmts()->size();
-        for( sal_uInt16 i = 0; i < nArrLen; i++ )
+        const sal_Int32 nArrLen = rDoc.GetFrmFmts()->size();
+        for( sal_Int32 i = 0; i < nArrLen; i++ )
         {
             SwFrmFmt* pFmt = (*rDoc.GetFrmFmts())[ i ];
 

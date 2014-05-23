@@ -54,9 +54,9 @@ static void lcl_MakeAutoFrms( const SwFrmFmts& rSpzArr, sal_uLong nMovedIndex )
     {
         SwFlyFrmFmt* pFmt;
         const SwFmtAnchor* pAnchor;
-        for( sal_uInt16 n = 0; n < rSpzArr.size(); ++n )
+        for ( SwFrmFmts::const_iterator it = rSpzArr.begin(); it != rSpzArr.end(); it++ )
         {
-            pFmt = (SwFlyFrmFmt*)rSpzArr[n];
+            pFmt = (SwFlyFrmFmt*) *it;
             pAnchor = &pFmt->GetAnchor();
             if (pAnchor->GetAnchorId() == FLY_AT_CHAR)
             {
@@ -717,16 +717,13 @@ static void lcl_ReAnchorAtCntntFlyFrames( const SwFrmFmts& rSpzArr, SwPosition &
 {
     if( !rSpzArr.empty() )
     {
-        SwFlyFrmFmt* pFmt;
-        const SwFmtAnchor* pAnchor;
-        const SwPosition* pAPos;
-        for( sal_uInt16 n = 0; n < rSpzArr.size(); ++n )
+        for ( SwFrmFmts::const_iterator it = rSpzArr.begin(); it != rSpzArr.end(); it++ )
         {
-            pFmt = (SwFlyFrmFmt*)rSpzArr[n];
-            pAnchor = &pFmt->GetAnchor();
+            SwFlyFrmFmt *pFmt = (SwFlyFrmFmt*) *it;
+            const SwFmtAnchor* pAnchor = &pFmt->GetAnchor();
             if (pAnchor->GetAnchorId() == FLY_AT_PARA)
             {
-                pAPos =  pAnchor->GetCntntAnchor();
+                const SwPosition *pAPos =  pAnchor->GetCntntAnchor();
                 if( pAPos && nOldIdx == pAPos->nNode.GetIndex() )
                 {
                     SwFmtAnchor aAnch( *pAnchor );

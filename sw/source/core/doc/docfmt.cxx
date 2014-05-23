@@ -1394,7 +1394,6 @@ void SwDoc::DelFrmFmt( SwFrmFmt *pFmt, bool bBroadcast )
     }
     else
     {
-
         // The format has to be in the one or the other, we'll see in which one.
         SwFrmFmts::iterator it = std::find( mpFrmFmtTbl->begin(), mpFrmFmtTbl->end(), pFmt );
         if ( it != mpFrmFmtTbl->end() )
@@ -1416,12 +1415,12 @@ void SwDoc::DelFrmFmt( SwFrmFmt *pFmt, bool bBroadcast )
         }
         else
         {
-            SwFrmFmts::iterator it2 = std::find( GetSpzFrmFmts()->begin(), GetSpzFrmFmts()->end(), pFmt );
-            OSL_ENSURE( it2 != GetSpzFrmFmts()->end(), "FrmFmt not found." );
-            if( it2 != GetSpzFrmFmts()->end() )
+            it = std::find( GetSpzFrmFmts()->begin(), GetSpzFrmFmts()->end(), pFmt );
+            OSL_ENSURE( it != GetSpzFrmFmts()->end(), "FrmFmt not found." );
+            if( it != GetSpzFrmFmts()->end() )
             {
-                delete *it2;
-                GetSpzFrmFmts()->erase( it2 );
+                delete *it;
+                GetSpzFrmFmts()->erase( it );
             }
         }
     }

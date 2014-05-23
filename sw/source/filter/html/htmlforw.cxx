@@ -1382,10 +1382,10 @@ void SwHTMLWriter::GetControls()
     }
 
     // und jetzt die in einem zeichengebundenen Rahmen
-    const SwFrmFmts* pSpzFrmFmts = pDoc->GetSpzFrmFmts();
-    for( i=0; i<pSpzFrmFmts->size(); i++ )
+    const SwFrmFmts& rFmts = *(pDoc->GetSpzFrmFmts());
+    for ( SwFrmFmts::const_iterator it = rFmts.begin(); it != rFmts.end(); it++ )
     {
-        const SwFrmFmt *pFrmFmt = (*pSpzFrmFmts)[i];
+        const SwFrmFmt *pFrmFmt = *it;
         if( RES_DRAWFRMFMT != pFrmFmt->Which() )
             continue;
 

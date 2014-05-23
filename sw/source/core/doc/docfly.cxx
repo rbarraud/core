@@ -68,17 +68,15 @@
 
 using namespace ::com::sun::star;
 
-sal_uInt16 SwDoc::GetFlyCount( FlyCntType eType ) const
+sal_Int32 SwDoc::GetFlyCount( FlyCntType eType ) const
 {
     const SwFrmFmts& rFmts = *GetSpzFrmFmts();
-    sal_uInt16 nSize = rFmts.size();
-    sal_uInt16 nCount = 0;
+    sal_Int32 nCount = 0;
     const SwNodeIndex* pIdx;
-    for ( sal_uInt16 i = 0; i < nSize; i++)
+    for ( SwFrmFmts::const_iterator it = rFmts.begin(); it != rFmts.end(); it++ )
     {
-        const SwFrmFmt* pFlyFmt = rFmts[ i ];
-        if( RES_FLYFRMFMT == pFlyFmt->Which()
-            && 0 != ( pIdx = pFlyFmt->GetCntnt().GetCntntIdx() )
+        if( RES_FLYFRMFMT == (*it)->Which()
+            && 0 != ( pIdx = (*it)->GetCntnt().GetCntntIdx() )
             && pIdx->GetNodes().IsDocNodes()
             )
         {
@@ -110,18 +108,16 @@ sal_uInt16 SwDoc::GetFlyCount( FlyCntType eType ) const
 }
 
 /// @attention If you change this, also update SwXFrameEnumeration in unocoll.
-SwFrmFmt* SwDoc::GetFlyNum( sal_uInt16 nIdx, FlyCntType eType )
+SwFrmFmt* SwDoc::GetFlyNum( sal_Int32 nIdx, FlyCntType eType )
 {
     SwFrmFmts& rFmts = *GetSpzFrmFmts();
     SwFrmFmt* pRetFmt = 0;
-    sal_uInt16 nSize = rFmts.size();
     const SwNodeIndex* pIdx;
-    sal_uInt16 nCount = 0;
-    for( sal_uInt16 i = 0; !pRetFmt && i < nSize; ++i )
+    sal_Int32 nCount = 0;
+    for ( SwFrmFmts::const_iterator it = rFmts.begin(); !pRetFmt && it != rFmts.end(); it++ )
     {
-        SwFrmFmt* pFlyFmt = rFmts[ i ];
-        if( RES_FLYFRMFMT == pFlyFmt->Which()
-            && 0 != ( pIdx = pFlyFmt->GetCntnt().GetCntntIdx() )
+        if( RES_FLYFRMFMT == (*it)->Which()
+            && 0 != ( pIdx = (*it)->GetCntnt().GetCntntIdx() )
             && pIdx->GetNodes().IsDocNodes()
             )
         {
@@ -130,19 +126,19 @@ SwFrmFmt* SwDoc::GetFlyNum( sal_uInt16 nIdx, FlyCntType eType )
             {
             case FLYCNTTYPE_FRM:
                 if( !pNd->IsNoTxtNode() && nIdx == nCount++)
-                    pRetFmt = pFlyFmt;
+                    pRetFmt = (*it);
                 break;
             case FLYCNTTYPE_GRF:
                 if(pNd->IsGrfNode() && nIdx == nCount++ )
-                    pRetFmt = pFlyFmt;
+                    pRetFmt = (*it);
                 break;
             case FLYCNTTYPE_OLE:
                 if(pNd->IsOLENode() && nIdx == nCount++)
-                    pRetFmt = pFlyFmt;
+                    pRetFmt = (*it);
                 break;
             default:
                 if(nIdx == nCount++)
-                    pRetFmt = pFlyFmt;
+                    pRetFmt = (*it);
             }
         }
     }

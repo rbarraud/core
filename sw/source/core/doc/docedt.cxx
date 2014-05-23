@@ -196,9 +196,9 @@ void _RestFlyInRange( _SaveFlyArr & rArr, const SwNodeIndex& rSttIdx,
 void _SaveFlyInRange( const SwNodeRange& rRg, _SaveFlyArr& rArr )
 {
     SwFrmFmts& rFmts = *rRg.aStart.GetNode().GetDoc()->GetSpzFrmFmts();
-    for( sal_uInt16 n = 0; n < rFmts.size(); ++n )
+    for ( SwFrmFmts::iterator it = rFmts.begin(); it != rFmts.end(); it++ )
     {
-        SwFrmFmt *const pFmt = static_cast<SwFrmFmt*>(rFmts[n]);
+        SwFrmFmt *const pFmt = *it;
         SwFmtAnchor const*const pAnchor = &pFmt->GetAnchor();
         SwPosition const*const pAPos = pAnchor->GetCntntAnchor();
         if (pAPos &&
@@ -210,7 +210,7 @@ void _SaveFlyInRange( const SwNodeRange& rRg, _SaveFlyArr& rArr )
                             pFmt, false );
             rArr.push_back( aSave );
             pFmt->DelFrms();
-            rFmts.erase( rFmts.begin() + n-- );
+            rFmts.erase( it - 1 );
         }
     }
 }
@@ -219,8 +219,6 @@ void _SaveFlyInRange( const SwPaM& rPam, const SwNodeIndex& rInsPos,
                        _SaveFlyArr& rArr, bool bMoveAllFlys )
 {
     SwFrmFmts& rFmts = *rPam.GetPoint()->nNode.GetNode().GetDoc()->GetSpzFrmFmts();
-    SwFrmFmt* pFmt;
-    const SwFmtAnchor* pAnchor;
 
     const SwPosition* pPos = rPam.Start();
     const SwNodeIndex& rSttNdIdx = pPos->nNode;
@@ -235,11 +233,11 @@ void _SaveFlyInRange( const SwPaM& rPam, const SwNodeIndex& rInsPos,
 
     const SwNodeIndex* pCntntIdx;
 
-    for( sal_uInt16 n = 0; n < rFmts.size(); ++n )
+    for ( SwFrmFmts::iterator it = rFmts.begin(); it != rFmts.end(); it++ )
     {
         bool bInsPos = false;
-        pFmt = (SwFrmFmt*)rFmts[n];
-        pAnchor = &pFmt->GetAnchor();
+        SwFrmFmt* pFmt = *it;
+        const SwFmtAnchor* pAnchor = &pFmt->GetAnchor();
         const SwPosition* pAPos = pAnchor->GetCntntAnchor();
         if (pAPos &&
             ((FLY_AT_PARA == pAnchor->GetAnchorId()) ||
@@ -271,7 +269,7 @@ void _SaveFlyInRange( const SwPaM& rPam, const SwNodeIndex& rInsPos,
                                 pFmt, bInsPos );
                 rArr.push_back( aSave );
                 pFmt->DelFrms();
-                rFmts.erase( rFmts.begin() + n-- );
+                rFmts.erase( it - 1 );
             }
         }
     }
@@ -286,7 +284,7 @@ void DelFlyInRange( const SwNodeIndex& rMkNdIdx,
 
     SwDoc* pDoc = rMkNdIdx.GetNode().GetDoc();
     SwFrmFmts& rTbl = *pDoc->GetSpzFrmFmts();
-    for ( sal_uInt16 i = rTbl.size(); i; )
+    for ( sal_Int32 i = rTbl.size(); i; )
     {
         SwFrmFmt *pFmt = rTbl[--i];
         const SwFmtAnchor &rAnch = pFmt->GetAnchor();
@@ -316,7 +314,7 @@ void DelFlyInRange( const SwNodeIndex& rMkNdIdx,
                                     SwNodeIndex( *rCntnt.GetCntntIdx()->
                                             GetNode().EndOfSectionNode() ));
                     // Position could have been moved!
-                    if( i > rTbl.size() )
+                    if( i > (sal_Int32) rTbl.size() )
                         i = rTbl.size();
                     else if( pFmt != rTbl[i] )
                         i = rTbl.GetPos( pFmt );
@@ -325,7 +323,7 @@ void DelFlyInRange( const SwNodeIndex& rMkNdIdx,
                 pDoc->DelLayoutFmt( pFmt );
 
                 // DelLayoutFmt can also trigger the deletion of objects.
-                if( i > rTbl.size() )
+                if( i > (sal_Int32) rTbl.size() )
                     i = rTbl.size();
             }
         }

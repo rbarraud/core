@@ -1392,9 +1392,9 @@ SwFrmFmt* SwFEShell::WizzardGetFly()
             // Cursor is in the body area!
             return 0;
 
-        for( sal_uInt16 n = 0; n < nCnt; ++n )
+        for ( SwFrmFmts::const_iterator it = rSpzArr.begin(); it != rSpzArr.end(); it++ )
         {
-            SwFrmFmt* pFmt = rSpzArr[ n ];
+            SwFrmFmt* pFmt = *it;
             const SwNodeIndex* pIdx = pFmt->GetCntnt( false ).GetCntntIdx();
             SwStartNode* pSttNd;
             if( pIdx &&

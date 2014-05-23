@@ -1738,10 +1738,9 @@ void SwEnhancedPDFExportHelper::EnhancedPDFExport()
         // HYPERLINKS (Graphics, Frames, OLEs )
 
         const SwFrmFmts* pTbl = pDoc->GetSpzFrmFmts();
-        const sal_uInt16 nSpzFrmFmtsCount = pTbl->size();
-        for( sal_uInt16 n = 0; n < nSpzFrmFmtsCount; ++n )
+        for ( SwFrmFmts::const_iterator it = pTbl->begin(); it != pTbl->end(); it++ )
         {
-            const SwFrmFmt* pFrmFmt = (*pTbl)[n];
+            const SwFrmFmt* pFrmFmt = *it;
             const SfxPoolItem* pItem;
             if ( RES_DRAWFRMFMT != pFrmFmt->Which() &&
                  SFX_ITEM_SET == pFrmFmt->GetAttrSet().GetItemState( RES_URL, true, &pItem ) )

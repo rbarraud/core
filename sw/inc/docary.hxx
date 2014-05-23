@@ -50,7 +50,10 @@ class SwFmtsBase
 {
 public:
     virtual size_t GetFmtCount() const = 0;
+    virtual size_t GetFmtCountMax() const = 0;
     virtual SwFmt* GetFmt(size_t) const = 0;
+    virtual size_t GetPos(SwFmt* const& p) const = 0;
+    virtual bool Contains(SwFmt* const& p) const = 0;
     virtual ~SwFmtsBase() {}
 };
 
@@ -62,9 +65,13 @@ public:
 
 private:
     const bool mCleanup;
+    int mIntMax;
 
 public:
-    SwFmtsBaseModify(bool cleanup = true) : mCleanup(cleanup) {}
+    SwFmtsBaseModify(bool cleanup = true, bool intmax = false) : mCleanup(cleanup)
+    {
+        mIntMax = (intmax) ? INT_MAX : USHRT_MAX;
+    }
 
     using std::vector<Value>::begin;
     using std::vector<Value>::end;
@@ -77,17 +84,26 @@ public:
                 delete *it;
     }
 
-    sal_uInt16 GetPos(Value const& p) const
+    size_t GetPos(Value const& p) const
     {
         const_iterator const it = std::find(begin(), end(), p);
-        return it == end() ? USHRT_MAX : it - begin();
+        return it == end() ? mIntMax : it - begin();
     }
+
     bool Contains(Value const& p) const
         { return std::find(begin(), end(), p) != end(); }
+
+    virtual size_t GetPos(SwFmt* const& p) const SAL_OVERRIDE
+        { return GetPos( (Value) p ); }
+    virtual bool Contains(SwFmt* const& p) const SAL_OVERRIDE
+        { return Contains( (Value) p ); }
     virtual size_t GetFmtCount() const SAL_OVERRIDE
         { return std::vector<Value>::size(); }
+    virtual size_t GetFmtCountMax() const SAL_OVERRIDE
+        { return mIntMax; }
     virtual SwFmt* GetFmt(size_t idx) const SAL_OVERRIDE
         { return (SwFmt*) std::vector<Value>::operator[](idx); }
+
     void dumpAsXml(xmlTextWriterPtr) {};
 };
 
@@ -102,6 +118,7 @@ public:
 class SW_DLLPUBLIC SwFrmFmts : public SwFmtsBaseModify<SwFrmFmt*>
 {
 public:
+    SwFrmFmts() : SwFmtsBaseModify( true, false ) {}
     virtual ~SwFrmFmts() {}
     void dumpAsXml(xmlTextWriterPtr w, const char* pName);
 };

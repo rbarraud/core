@@ -691,9 +691,9 @@ const SwTable* SwTableFormula::FindTable( SwDoc& rDoc, const OUString& rNm ) con
 {
     const SwFrmFmts& rTblFmts = *rDoc.GetTblFrmFmts();
     const SwTable* pTmpTbl = 0, *pRet = 0;
-    for( sal_uInt16 nFmtCnt = rTblFmts.size(); nFmtCnt; )
+    for ( SwFrmFmts::const_reverse_iterator it = rTblFmts.rbegin(); it != rTblFmts.rend(); it++ )
     {
-        SwFrmFmt* pFmt = rTblFmts[ --nFmtCnt ];
+        SwFrmFmt* pFmt = *it;
         // if we are called from Sw3Writer, a number is dependent on the format name
         SwTableBox* pFBox;
         if ( rNm.equals(pFmt->GetName().getToken(0, 0x0a)) &&

@@ -880,9 +880,9 @@ bool IsEmptyBox( const SwTableBox& rBox, SwPaM& rPam )
               nEndIdx = rBox.GetSttNd()->EndOfSectionIndex(),
               nIdx;
 
-        for( sal_uInt16 n = 0; n < rFmts.size(); ++n )
+        for ( SwFrmFmts::const_iterator it = rFmts.begin(); it != rFmts.end(); it++ )
         {
-            const SwFmtAnchor& rAnchor = rFmts[n]->GetAnchor();
+            const SwFmtAnchor& rAnchor = (*it)->GetAnchor();
             const SwPosition* pAPos = rAnchor.GetCntntAnchor();
             if (pAPos &&
                 ((FLY_AT_PARA == rAnchor.GetAnchorId()) ||

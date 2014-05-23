@@ -425,8 +425,8 @@ SwTableNode* SwTableNode::MakeCopy( SwDoc* pDoc, const SwNodeIndex& rIdx ) const
     if( !pDoc->IsCopyIsMove() )
     {
         const SwFrmFmts& rTblFmts = *pDoc->GetTblFrmFmts();
-        for( sal_uInt16 n = rTblFmts.size(); n; )
-            if( rTblFmts[ --n ]->GetName() == sTblName )
+        for ( SwFrmFmts::const_reverse_iterator it = rTblFmts.rbegin(); it != rTblFmts.rend(); it++ )
+            if( (*it)->GetName() == sTblName )
             {
                 sTblName = pDoc->GetUniqueTblName();
                 break;
@@ -534,9 +534,9 @@ static bool lcl_ChkFlyFly( SwDoc* pDoc, sal_uLong nSttNd, sal_uLong nEndNd,
 {
     const SwFrmFmts& rFrmFmtTbl = *pDoc->GetSpzFrmFmts();
 
-    for( sal_uInt16 n = 0; n < rFrmFmtTbl.size(); ++n )
+    for ( SwFrmFmts::const_iterator it = rFrmFmtTbl.begin(); it != rFrmFmtTbl.end(); it++ )
     {
-        SwFrmFmt const*const  pFmt = rFrmFmtTbl[n];
+        SwFrmFmt const*const pFmt = *it;
         SwFmtAnchor const*const pAnchor = &pFmt->GetAnchor();
         SwPosition const*const pAPos = pAnchor->GetCntntAnchor();
         if (pAPos &&

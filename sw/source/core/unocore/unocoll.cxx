@@ -1083,11 +1083,11 @@ SwXFrameEnumeration<T>::SwXFrameEnumeration(const SwDoc* const pDoc)
         return;
     // #i104937#
 //    const SwFrmFmt* const pFmtsEnd = (*pFmts)[pFmts->Count()];
-    const sal_uInt16 nSize = pFmts->size();
+    const sal_Int32 nSize = pFmts->size();
     ::std::insert_iterator<frmcontainer_t> pInserter = ::std::insert_iterator<frmcontainer_t>(m_aFrames, m_aFrames.begin());
     // #i104937#
     SwFrmFmt* pFmt( 0 );
-    for( sal_uInt16 i = 0; i < nSize; ++i )
+    for( sal_Int32 i = 0; i < nSize; ++i )
 //    for(SwFrmFmt* pFmt = (*pFmts)[0]; pFmt < pFmtsEnd; ++pFmt)
     {
         // #i104937#

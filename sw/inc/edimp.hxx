@@ -27,15 +27,16 @@ class SwPaM;
 class SwNodeIndex;
 
 // Macros to iterate over all ranges.
-#define PCURCRSR (_pStartCrsr)
+#define PCURCRSR (_pCurrCrsr)
 
 #define FOREACHPAM_START(pCURSH) \
     {\
-        SwPaM *_pStartCrsr = (pCURSH), *__pStartCrsr = _pStartCrsr; \
+        SwPaM *_pStartCrsr = (pCURSH); \
+        SwPaM *_pCurrCrsr = _pStartCrsr; \
         do {
 
 #define FOREACHPAM_END() \
-        } while( (_pStartCrsr=(SwPaM *)_pStartCrsr->GetNext()) != __pStartCrsr ); \
+        } while( (_pCurrCrsr = (SwPaM *) _pCurrCrsr->GetNext()) != _pStartCrsr ); \
     }
 
 struct SwPamRange
