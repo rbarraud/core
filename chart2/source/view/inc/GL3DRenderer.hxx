@@ -143,15 +143,6 @@ struct TextInfo
     float vertex[12];
 };
 
-typedef struct SceneBox{
-    float maxXCoord;
-    float minXCoord;
-    float maxYCoord;
-    float minYCoord;
-    float maxZCoord;
-    float minZCoord;
-}SceneBox;
-
 class OpenGL3DRenderer
 {
 public:
@@ -363,7 +354,6 @@ private:
     float m_fHeightWeight;
 
     bool mbPickingMode;
-    SceneBox m_SenceBox;
 
     GLuint mnPickingFbo;
     GLuint mnPickingRboDepth;
