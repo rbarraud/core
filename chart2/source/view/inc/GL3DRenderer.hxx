@@ -203,7 +203,6 @@ private:
     int GenerateRoundCornerBar(std::vector<glm::vec3> &vertices, std::vector<glm::vec3> &normals, float fRadius, int iSubDivY,
                                int iSubDivZ, float width, float height, float depth);
     void CreateSceneBoxView();
-    void RenderTexture(GLuint TexID);
 
     void ReleaseShapes();
     void ReleasePolygonShapes();
@@ -241,12 +240,6 @@ private:
         GLint m_2DVertexID;
         GLint m_2DColorID;
         GLint m_MatrixID;
-
-        // RenderProID
-        GLint m_RenderProID;
-        GLint m_RenderTexID;
-        GLint m_RenderVertexID;
-        GLint m_RenderTexCoordID;
 
         ShaderResources();
         ~ShaderResources();
