@@ -27,6 +27,10 @@ $(eval $(call gb_StaticLibrary_use_externals,libgltf,\
     freetype \
 ))
 
+$(eval $(call gb_StaticLibrary_add_defs,libgltf,\
+	-DENABLE_FPS=1 \
+))
+
 $(eval $(call gb_StaticLibrary_set_include,libgltf,\
     -I$(call gb_UnpackedTarball_get_dir,libgltf)/inc \
 	$$(INCLUDE) \
@@ -35,6 +39,8 @@ $(eval $(call gb_StaticLibrary_set_include,libgltf,\
 $(eval $(call gb_StaticLibrary_add_generated_exception_objects,libgltf,\
 	UnpackedTarball/libgltf/src/Camera \
 	UnpackedTarball/libgltf/src/Common \
+	UnpackedTarball/libgltf/src/Font \
+	UnpackedTarball/libgltf/src/FPSCounter \
 	UnpackedTarball/libgltf/src/libgltf \
 	UnpackedTarball/libgltf/src/LoadScene \
 	UnpackedTarball/libgltf/src/RenderScene \
