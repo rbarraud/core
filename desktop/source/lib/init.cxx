@@ -71,6 +71,17 @@ typedef struct
     const char *filterName;
 } ExtensionMap;
 
+// We need a shared_array for passing into the BitmapDevice (via
+// VirtualDevice.SetOutputSizePixelScaleOffsetAndBuffer which goes via the
+// SvpVirtualDevice, ending up in the basebmp BitmapDevice. However as we're
+// given the array externally we can't delete it, and hence need to override
+// shared_array's default of deleting its pointer.
+template<typename T>
+struct NoDelete
+{
+   void operator()(T* /* p */) {}
+};
+
 static const ExtensionMap aWriterExtensionMap[] =
 {
     { "doc",   "MS Word 97" },
@@ -168,7 +179,8 @@ static int  doc_saveAsWithOptions(LibreOfficeDocument* pThis, const char* pUrl, 
 static LibreOfficeDocumentType doc_getDocumentType(LibreOfficeDocument* pThis);
 static int doc_getNumberOfParts(LibreOfficeDocument* pThis);
 static void doc_setPart(LibreOfficeDocument* pThis, int nPart);
-static unsigned char* doc_paintTile(LibreOfficeDocument* pThis,
+static void doc_paintTile(LibreOfficeDocument* pThis,
+                          unsigned char* pBuffer,
                           const int nCanvasWidth, const int nCanvasHeight,
                           int* pRowStride,
                           const int nTilePosX, const int nTilePosY,
@@ -369,14 +381,6 @@ static void doc_setPart(LibreOfficeDocument* pThis, int nPart)
     (void) nPart;
 }
 
-// TODO: Temporary hack -- we need to keep the buffer alive while we paint it
-// in the gtk tiled viewer -- we can't pass out the shared_array through
-// the C interface, so maybe we want some sort of wrapper where we can return
-// a handle which we then associate with a given shared_array within LibLO
-// (where the client then has to tell us when they are finished with using
-// the buffer).
-boost::shared_array< sal_uInt8 > ourBuffer;
-
 // TODO: Not 100% sure about the bitmap buffer format yet -- it appears
 // to just be RGB, 8 bits per sample, and vertically mirrored compared
 // to what gtk expects.
@@ -394,15 +398,14 @@ boost::shared_array< sal_uInt8 > ourBuffer;
 // We probably also want to use getScanlineStride() -- I'm guessing that
 // this is where we are actually just returning a sub-portion of a larger buffer
 // which /shouldn't/ apply in our case, but better to be safe here.
-static unsigned char* doc_paintTile (LibreOfficeDocument* pThis,
+static void doc_paintTile (LibreOfficeDocument* pThis,
+                           unsigned char* pBuffer,
                            const int nCanvasWidth, const int nCanvasHeight,
                            int* pRowStride,
                            const int nTilePosX, const int nTilePosY,
                            const int nTileWidth, const int nTileHeight)
 {
     LibLODocument_Impl* pDocument = static_cast<LibLODocument_Impl*>(pThis);
-
-    unsigned char* pRet = 0;
 
     Application::AcquireSolarMutex(1);
     {
@@ -416,6 +419,10 @@ static unsigned char* doc_paintTile (LibreOfficeDocument* pThis,
         pSalInstance->setBitCountFormatMapping( 32, ::basebmp::FORMAT_THIRTYTWO_BIT_TC_MASK_RGBA );
 
         VirtualDevice aDevice(0, (sal_uInt16)32);
+        boost::shared_array< sal_uInt8 > aBuffer( pBuffer, NoDelete< sal_uInt8 >() );
+        aDevice.SetOutputSizePixelScaleOffsetAndBuffer(
+                    Size(nCanvasWidth, nCanvasHeight), Fraction(1.0), Point(),
+                    aBuffer, true );
 
         pViewShell->PaintTile(aDevice, nCanvasWidth, nCanvasHeight,
                                 nTilePosX, nTilePosY, nTileWidth, nTileHeight);
@@ -424,13 +431,8 @@ static unsigned char* doc_paintTile (LibreOfficeDocument* pThis,
         basebmp::BitmapDeviceSharedPtr pBmpDev = pSalDev->getBitmapDevice();
 
         *pRowStride = pBmpDev->getScanlineStride();
-        ourBuffer = pBmpDev->getBuffer();
-
-        pRet = ourBuffer.get();
     }
     Application::ReleaseSolarMutex();
-
-    return pRet;
 }
 
 static void doc_getDocumentSize(LibreOfficeDocument* pThis,

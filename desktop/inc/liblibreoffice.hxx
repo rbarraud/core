@@ -65,7 +65,9 @@ public:
         mpDoc->setPart(mpDoc, nPart);
     }
 
-    inline unsigned char* paintTile(const int nCanvasWidth,
+    inline void paintTile(
+                          unsigned char* pBuffer,
+                          const int nCanvasWidth,
                           const int nCanvasHeight,
                           int* pRowStride,
                           const int nTilePosX,
@@ -73,7 +75,7 @@ public:
                           const int nTileWidth,
                           const int nTileHeight)
     {
-        return mpDoc->paintTile(mpDoc, nCanvasWidth, nCanvasHeight, pRowStride,
+        return mpDoc->paintTile(mpDoc, pBuffer, nCanvasWidth, nCanvasHeight, pRowStride,
                                 nTilePosX, nTilePosY, nTileWidth, nTileHeight);
     }
 
