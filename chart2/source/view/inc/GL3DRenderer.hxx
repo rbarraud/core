@@ -83,9 +83,9 @@ struct Polygon3DInfo
     Vertices3D *vertices;
     UVs3D *uvs;
     Normals3D *normals;
-    std::list <Vertices3D *> verticesList;
-    std::list <UVs3D *> uvsList;
-    std::list <Normals3D *> normalsList;
+    std::vector <Vertices3D *> verticesList;
+    std::vector <UVs3D *> uvsList;
+    std::vector <Normals3D *> normalsList;
     MaterialParameters material;
 };
 
@@ -209,6 +209,11 @@ private:
                                int iSubDivZ, float width, float height, float depth);
     void CreateSceneBoxView();
     void RenderTexture(GLuint TexID);
+
+    void ReleaseShapes();
+    void ReleasePolygonShapes();
+    void ReleaseExtrude3DShapes();
+    void ReleaseTextShapes();
 private:
 
     struct ShaderResources
@@ -297,7 +302,7 @@ private:
 
     Polygon3DInfo m_Polygon3DInfo;
 
-    std::list <Polygon3DInfo> m_Polygon3DInfoList;
+    std::vector <Polygon3DInfo> m_Polygon3DInfoList;
 
     glm::mat4 m_D3DTrasform;
 
@@ -332,7 +337,7 @@ private:
     GLuint m_BoundBox;
     GLuint m_BoundBoxNormal;
      // add for text
-    std::list <TextInfo> m_TextInfoList;
+    std::vector <TextInfo> m_TextInfoList;
     GLuint m_TextTexCoordBuf;
 
     int m_uiSelectFrameCounter;
